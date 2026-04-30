@@ -1,4 +1,7 @@
 <?php
+
+define( 'WP_HOME', '');
+define( 'WP_SITEURL', '');
 /**
  * The base configuration for WordPress
  *
@@ -21,16 +24,16 @@
 
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'local' );
+define( 'DB_NAME', 'knejpen_projekt_dk_db' );
 
 /** Database username */
-define( 'DB_USER', 'root' );
+define( 'DB_USER', 'knejpen_projekt_dk' );
 
 /** Database password */
-define( 'DB_PASSWORD', 'root' );
+define( 'DB_PASSWORD', 'D39hG5etAfFanwmrRpd2' );
 
 /** Database hostname */
-define( 'DB_HOST', 'localhost' );
+define( 'DB_HOST', 'mysql72.unoeuro.com' );
 
 /** Database charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8' );
