@@ -33,7 +33,7 @@ define( 'DB_USER', 'knejpen_projekt_dk' );
 define( 'DB_PASSWORD', 'D39hG5etAfFanwmrRpd2' );
 
 /** Database hostname */
-define( 'DB_HOST', 'mysql72.unoeuro.com' );
+define( 'DB_HOST', 'mysql72.unoeuro.com:3306' );
 
 /** Database charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8' );
