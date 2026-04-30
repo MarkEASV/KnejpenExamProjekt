@@ -1,7 +1,7 @@
 <?php
 
-define( 'WP_HOME', '');
-define( 'WP_SITEURL', '');
+define( 'WP_HOME', 'knejpen2026.local');
+define( 'WP_SITEURL', 'knejpen2026.local');
 /**
  * The base configuration for WordPress
  *
