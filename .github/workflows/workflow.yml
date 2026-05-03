@@ -1,20 +1,43 @@
-name: TeamWorkflow
+name: workflow
 
 on:
+  pull_request:
+    branches:
+      - main
+
   push:
     branches:
       - main
 
 jobs:
-  integration-delivery:
+  test:
+    name: Run TestCafe Tests (PR only)
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-22.04
-    environment: Test
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: FTP deploy to TEST
+      - name: Set test URL
+        run: echo "testPage=https://knejpen-projekt.dk/test/" >> $GITHUB_ENV
+
+      - name: Run TestCafe tests
+        uses: DevExpress/testcafe-action@latest
+        with:
+          args: "chrome test/*"
+
+
+  deploy:
+    name: Deploy Theme (after merge to main)
+    if: github.event_name == 'push'
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to TEST via FTP
         uses: SamKirkland/FTP-deploy-Action@4.3.3
         with:
           server: ${{ vars.FTP_SERVER }}
@@ -26,55 +49,11 @@ jobs:
 
           protocol: ftp
           port: 21
-
           security: loose
 
           timeout: 120000
           log-level: verbose
 
-          dangerous-clean-slate: false
-          exclude: |
-            **/.git*
-            **/.github*
-            **/node_modules/**
-
-      - name: Inject test page URL
-        run: echo "testPage=${{ secrets.TEST_PAGE_URL }}" >> $GITHUB_ENV
-
-      - name: Run TestCafe Tests
-        uses: DevExpress/testcafe-action@latest
-        with:
-          args: "chrome test/*"
-
-      - name: Store artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: theme
-          path: ./wp-content/themes/knejpen/
-
-  deployment:
-    needs: integration-delivery
-    runs-on: ubuntu-22.04
-    environment: Live
-
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: theme
-          path: ./theme/
-
-      - name: FTP deploy to LIVE
-        uses: SamKirkland/FTP-deploy-Action@4.3.3
-        with:
-          server: ${{ vars.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-
-          local-dir: ./theme/
-          server-dir: live/wp-content/themes/knejpen/
-
-          dangerous-clean-slate: false
           exclude: |
             **/.git*
             **/.github*
