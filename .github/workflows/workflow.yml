@@ -11,8 +11,8 @@ on:
 
 jobs:
   test:
-    name: Run TestCafe Tests (PR only)
-    if: github.event_name == 'pull_request'
+    name: Run TestCafe Tests
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
     runs-on: ubuntu-22.04
 
     steps:
