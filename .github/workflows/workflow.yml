@@ -1,4 +1,4 @@
-name: TeamWorkflow
+name: workflow
 
 on:
   push:
@@ -9,20 +9,10 @@ jobs:
   integration-delivery:
     runs-on: ubuntu-22.04
     environment: Test
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Setup node
-        uses: actions/setup-node@v6
-        with:
-          node-version: latest
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build website
-        run: npm run build
 
       - name: FTP delivery
         uses: SamKirkland/FTP-deploy-Action@4.3.3
@@ -31,7 +21,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: test/todo/
-          local-dir: dist/
+          local-dir: ./
 
       - name: Inject test page URL
         run: echo "testPage=${{ secrets.TEST_PAGE_URL }}" >> $GITHUB_ENV
@@ -39,24 +29,25 @@ jobs:
       - name: Run TestCafe Tests
         uses: DevExpress/testcafe-action@latest
         with:
-          args: "chrome test/*"  
+          args: "chrome test/*"
 
       - name: Store artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: dist
-          path: dist/
+          name: site
+          path: ./
 
   deployment:
     needs: integration-delivery
     runs-on: ubuntu-22.04
     environment: Live
+
     steps:
       - name: Load artifacts
         uses: actions/download-artifact@v4
         with:
-          name: dist
-          path: dist/   
+          name: site
+          path: ./
 
       - name: FTP deploy
         uses: SamKirkland/FTP-deploy-Action@4.3.3
@@ -65,4 +56,4 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: live/todo/
-          local-dir: dist/      
+          local-dir: ./
