@@ -22,8 +22,15 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
 
           local-dir: ./wp-content/themes/knejpen/
-
           server-dir: test/wp-content/themes/knejpen/
+
+          protocol: ftp
+          port: 21
+
+          security: loose
+
+          timeout: 120000
+          log-level: verbose
 
           dangerous-clean-slate: false
           exclude: |
